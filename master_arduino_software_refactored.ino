@@ -4,7 +4,7 @@
 // Define pins for RC inputs - all analog pins
 #define RIGHT_IN A3   // Channel 3 - Get input for right thruster
 #define LEFT_IN A2    // Channel 2 - Get input for left thruster
-#define LEFT_KNOB A4  // Channel 6 - Activate or deactivate kill switch
+#define LEFT_KNOB A4  // Channel 4 - Activate or deactivate kill switch
 #define RIGHT_KNOB A5 // Channel 5 - switch between manual and autonomous
 
 // Define pins for thrusters - all digital pwm pins
@@ -78,24 +78,25 @@ float sensorValue3;
 // ==================================================================================
 // Stop thrusters and activate kill switch
 // Sits and waits until system is unkilled
+// Edited to add timeouts
 void killAll()
 {
   sys_kill = true;
   right_thruster.writeMicroseconds(1500);
   left_thruster.writeMicroseconds(1500);
   Serial.println("KILL");
-  l_knob_val = pulseIn(LEFT_KNOB, HIGH);
-  right_in_val = pulseIn(RIGHT_IN, HIGH);
-  left_in_val = pulseIn(LEFT_IN, HIGH);
-  r_knob_val = pulseIn(RIGHT_KNOB, HIGH);
+  l_knob_val = pulseIn(LEFT_KNOB, HIGH, 500000);
+  right_in_val = pulseIn(RIGHT_IN, HIGH, 500000);
+  left_in_val = pulseIn(LEFT_IN, HIGH, 500000);
+  r_knob_val = pulseIn(RIGHT_KNOB, HIGH, 500000);
   onboard_ks_val = digitalRead(ONBOARD_KS);
   while (l_knob_val < LEFT_KNOB_MIN + VALUE_BUFFER || onboard_ks_val == 0 || right_in_val < RIGHT_IN_MIN || left_in_val < LEFT_IN_MIN || r_knob_val < RIGHT_KNOB_MIN) // exit while loop if both kill switches are not active
   {
     onboard_ks_val = digitalRead(ONBOARD_KS);
-    l_knob_val = pulseIn(LEFT_KNOB, HIGH);
-    right_in_val = pulseIn(RIGHT_IN, HIGH);
-    left_in_val = pulseIn(LEFT_IN, HIGH);
-    r_knob_val = pulseIn(RIGHT_KNOB, HIGH);
+    l_knob_val = pulseIn(LEFT_KNOB, HIGH, 500000);
+    right_in_val = pulseIn(RIGHT_IN, HIGH, 500000);
+    left_in_val = pulseIn(LEFT_IN, HIGH, 500000);
+    r_knob_val = pulseIn(RIGHT_KNOB, HIGH, 500000);
     // Serial.println("L_knob: " + String(l_knob_val) + ", KS: " + String(onboard_ks_val));
     Serial.println("KILL");
   }
@@ -120,7 +121,7 @@ void unKillAll()
 void setup()
 {
   // Set up serial communication
-  // Serial.begin(115200);
+  Serial.begin(115200);
   // Serial.println("Started");
 
   // Set up I/O pins
@@ -129,10 +130,10 @@ void setup()
   pinMode(LEFT_KNOB, INPUT);
   pinMode(RIGHT_KNOB, INPUT);
   pinMode(ONBOARD_KS, INPUT);
-  pinMode(BAT_CELL1, INPUT);
-  pinMode(BAT_CELL2, INPUT);
-  pinMode(BAT_CELL3, INPUT);
-  pinMode(BAT_CELL4, INPUT);
+  // pinMode(BAT_CELL1, INPUT);
+  // pinMode(BAT_CELL2, INPUT);
+  // pinMode(BAT_CELL3, INPUT);
+  // pinMode(BAT_CELL4, INPUT);
 
   // Attach thruster pin to servo object
   right_thruster.attach(R_THRUSTER);
@@ -199,9 +200,9 @@ void loop()
     killAll(); // Stop motors
   }
 
-  // Poll the RC inputs for knobs, update the values
-  l_knob_val = pulseIn(LEFT_KNOB, HIGH);
-  r_knob_val = pulseIn(RIGHT_KNOB, HIGH);
+  // Poll the RC inputs for knobs, update the values, edited to add timeouts
+  l_knob_val = pulseIn(LEFT_KNOB, HIGH, 100000);
+  r_knob_val = pulseIn(RIGHT_KNOB, HIGH, 100000);
 
   debouncing(r_knob_val, RIGHT_KNOB_MIN, db_right_knob, lg_right_knob);
 
@@ -229,8 +230,9 @@ void loop()
   // Only do if manual mode
   if (is_manual)
   {
-    left_in_val = pulseIn(LEFT_IN, HIGH);
-    right_in_val = pulseIn(RIGHT_IN, HIGH);
+    // Edited to add timeouts
+    left_in_val = pulseIn(LEFT_IN, HIGH, 100000);
+    right_in_val = pulseIn(RIGHT_IN, HIGH, 100000);
 
     // left in deboucning logic
     debouncing(left_in_val, LEFT_IN_MIN, db_left_input, lg_left_in);
@@ -245,8 +247,8 @@ void loop()
       thruster_r_out = 1500;
     }
 
-    // flip THRUSTER_MIN and THRUSTER_MAX to flip direction of thrusters
-    thruster_l_out = (int)map(left_in_val, LEFT_IN_MAX, LEFT_IN_MIN, THRUSTER_MIN, THRUSTER_MAX);
+    // Do not flip THRUSTER_MIN and THRUSTER_MAX to flip direction of thrusters (Edited to keep motors forward)
+    thruster_l_out = (int)map(left_in_val, LEFT_IN_MIN, LEFT_IN_MAX, THRUSTER_MIN, THRUSTER_MAX);
     if (thruster_l_out < 1600 && thruster_l_out > 1400)
     {
       thruster_l_out = 1500;
