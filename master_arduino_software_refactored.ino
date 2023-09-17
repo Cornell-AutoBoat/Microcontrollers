@@ -2,20 +2,20 @@
 #include <Servo.h>
 
 // Define pins for RC inputs - all analog pins
-#define RIGHT_IN A1   // Channel 3 - Get input for right thruster
-#define LEFT_IN A4    // Channel 2 - Get input for left thruster
-#define LEFT_KNOB A2  // Channel 6 - Activate or deactivate kill switch
-#define RIGHT_KNOB A3 // Channel 5 - switch between manual and autonomous
+#define RIGHT_IN A3   // Channel 3 - Get input for right thruster
+#define LEFT_IN A2    // Channel 2 - Get input for left thruster
+#define LEFT_KNOB A4  // Channel 6 - Activate or deactivate kill switch
+#define RIGHT_KNOB A5 // Channel 5 - switch between manual and autonomous
 
 // Define pins for thrusters - all digital pwm pins
-#define R_THRUSTER 13
-#define L_THRUSTER 12
+#define R_THRUSTER 6
+#define L_THRUSTER 5
 
 // Define pins to read cell voltage from battery
-#define BAT_CELL1 A15
-#define BAT_CELL2 A14
-#define BAT_CELL3 A13
-#define BAT_CELL4 A12
+// #define BAT_CELL1 A15
+// #define BAT_CELL2 A14
+// #define BAT_CELL3 A13
+// #define BAT_CELL4 A12
 
 // Define pin to read onbaord killswitch
 #define ONBOARD_KS 22
@@ -120,7 +120,7 @@ void unKillAll()
 void setup()
 {
   // Set up serial communication
-  Serial.begin(115200);
+  // Serial.begin(115200);
   // Serial.println("Started");
 
   // Set up I/O pins
