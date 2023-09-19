@@ -2,8 +2,8 @@
 #include <Servo.h>
 
 // Define pins for RC inputs - all analog pins
-#define RIGHT_IN A3   // Channel 3 - Get input for right thruster
-#define LEFT_IN A2    // Channel 2 - Get input for left thruster
+#define RIGHT_IN A2   // Channel 2 - Get input for right thruster
+#define LEFT_IN A3    // Channel 3 - Get input for left thruster
 #define LEFT_KNOB A4  // Channel 4 - Activate or deactivate kill switch
 #define RIGHT_KNOB A5 // Channel 5 - switch between manual and autonomous
 
