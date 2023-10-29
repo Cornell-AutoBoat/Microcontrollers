@@ -3,6 +3,10 @@
  *        By James Henderson, 2014        *
  *****************************************/
 
+/**
+ * Tested by controls Oct 2023. Only change is added delay after setup.
+ */
+
 #include <SoftwareSerial.h>
 
 #define CMPS_GET_ANGLE8 0x12
@@ -20,6 +24,7 @@ void setup()
 {
     Serial.begin(9600); // Start serial ports
     CMPS12.begin(9600); // Compass needs an additional line of Serial communication
+    delay(3000);        // Delay so that first write can be processed
 }
 
 void loop()
