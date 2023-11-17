@@ -102,51 +102,21 @@ void setup()
 
 void loop()
 {
-    if (Serial.available()) // A key is pressed
-        // Once here, program will stay in beginServing()
-        beginServing();
-
-    Serial.println(F("Press any key to start serving"));
-
-    delay(1000);
-}
-
-void beginServing()
-{
-    Serial.println("Begin transmitting to caster. Press any key to stop");
-    delay(10); // Wait for any serial to arrive
-    while (Serial.available())
-        Serial.read(); // Flush
-
+    delay(50);
     lastReport_ms = millis();
 
-    // This is the main sending loop. We scan for new ublox data but processRTCM() is where the data actually gets sent out.
-    while (Serial.available() == 0)
-    {
-        while (1)
-        {
-            if (Serial.available()) // If there was a user input pressed
-                break;
+    // We scan for new ublox data but processRTCM() is where the data actually gets sent out.
 
-            myGNSS.checkUblox(); // See if new data is available. Process bytes as they come in.
-
-            delay(10);
-
-            // Report some statistics every 250
-            if (millis() - lastReport_ms > 250)
-            {
-                lastReport_ms += 250;
-                Serial.printf("Total sent: %d\n", serverBytesSent);
-            }
-        }
-    }
-
-    Serial.println("User pressed a key");
-    Serial.println("Disconnecting...");
+    myGNSS.checkUblox(); // See if new data is available. Process bytes as they come in.
 
     delay(10);
-    while (Serial.available())
-        Serial.read(); // Flush any endlines or carriage returns
+
+    // Report some statistics every 250
+    if (millis() - lastReport_ms > 250)
+    {
+        lastReport_ms += 250;
+        Serial.printf("Total sent: %d\n", serverBytesSent);
+    }
 }
 
 // This function gets called from the SparkFun u-blox Arduino Library.
