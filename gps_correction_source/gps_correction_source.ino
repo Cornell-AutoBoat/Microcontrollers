@@ -281,6 +281,7 @@ void beginServing()
 void DevUBLOXGNSS::processRTCM(uint8_t incoming)
 {
     Serial.println(incoming);
+    serverBytesSent++;
     // if (ntripCaster.connected() == true)
     // {
     //     ntripCaster.write(incoming); // Send this byte to socket
