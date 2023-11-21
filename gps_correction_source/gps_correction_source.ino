@@ -103,18 +103,15 @@ void setup()
 void loop()
 {
     delay(50);
-    lastReport_ms = millis();
 
     // We scan for new ublox data but processRTCM() is where the data actually gets sent out.
 
     myGNSS.checkUblox(); // See if new data is available. Process bytes as they come in.
 
-    delay(10);
-
     // Report some statistics every 250
     if (millis() - lastReport_ms > 250)
     {
-        lastReport_ms += 250;
+        lastReport_ms - millis();
         Serial.printf("Total sent: %d\n", serverBytesSent);
     }
 }
