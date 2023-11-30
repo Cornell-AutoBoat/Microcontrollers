@@ -112,7 +112,7 @@ void loop()
     if (millis() - lastReport_ms > 250)
     {
         lastReport_ms - millis();
-        Serial.printf("Total sent: %d\n", serverBytesSent);
+        // Serial.printf("Total sent: %d\n", serverBytesSent);
     }
 }
 
